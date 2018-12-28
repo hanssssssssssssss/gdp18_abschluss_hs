@@ -8,5 +8,5 @@ Created on Fri Dec 28 18:49:47 2018
 import urllib.request, json
 jsonsource = "https://correspsearch.net/quotesalute/abfrage.xql"
 jsonsalute = urllib.request.urlopen(jsonsource)
-salute = json.loads(jsonsalute.read())
-print (salute)
+fullsalute = json.loads(jsonsalute.read())
+print(fullsalute['quote'])
