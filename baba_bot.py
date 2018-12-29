@@ -27,29 +27,33 @@ def addSpace(text):
         text = (text[:location] + ' ' + text[location:])
     return(text)
 
-def tweetSalute(user):
-    "Calls the Twitter API to post a status update with a random quote, also does some repairwork if a spaces is missing"
+def tweetSalute(user,replyToID):
+    "Calls the Twitter API to post a reply with a random quote, also does some repairwork if a spaces is missing"
+    #get the source material as json from the quotesalute webservice
     jsonsource = "https://correspsearch.net/quotesalute/abfrage.xql"
     jsonsalute = urllib.request.urlopen(jsonsource)
     fullsalute = json.loads(jsonsalute.read())
     salute = fullsalute['quote']
-
     #check for missing spaces (=camelCase) with regex
     if re.match(r".*[a-z][A-Z].*" , salute ):
         salute = addSpace(salute)
-    
-    twitterAPI.update_status("{} @{}".format(salute,user))
+    #send the reply
+    twitterAPI.update_status("{} @{}".format(salute,user) , in_reply_to_status_id = replyToID)
     print("{} @{}".format(salute,user))
     
 #find all mentions and update the lastChecked timer
 allMentions = twitterAPI.search(q="@servusbaba")
-lastChecked = datetime.datetime.now()
+lastChecked = datetime.datetime.now() - datetime.timedelta(days=1)
 
 #weed out the mentions that have already been seen
 for mention in allMentions:
+    print(mention.id)
     print(mention.text)
     print(mention.created_at)
     print(lastChecked)
-    if mention.created_at < lastChecked:
+    if lastChecked < mention.created_at:
         fromUser = mention.user.screen_name
-        tweetSalute(fromUser)
+        mentionID = mention.id
+        tweetSalute(fromUser,mentionID)
+    else:
+        print("no new mentions found")
