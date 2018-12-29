@@ -7,11 +7,14 @@ Created on Fri Dec 28 18:49:47 2018
 """
 import urllib.request, json, tweepy
 
-#Example values
-CONSUMER_KEY = 'EXAMPLEKEY'
-CONSUMER_SECRET = 'EXAMPLE'
-ACCESS_KEY = 'EXAMPLEKEY'
-ACCESS_SECRET = 'EXAMPLE'
+#get private keys for the twittter account from module
+from keys import keys
+CONSUMER_KEY = keys['consumer_key']
+CONSUMER_SECRET = keys['consumer_secret']
+ACCESS_TOKEN = keys['access_token']
+ACCESS_TOKEN_SECRET = keys['access_token_secret']
+
+#login to twitter-app to be able to call twiter's API
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 twitterAPI = tweepy.API(auth)
