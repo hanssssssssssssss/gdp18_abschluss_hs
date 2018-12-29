@@ -16,7 +16,7 @@ ACCESS_TOKEN_SECRET = keys['access_token_secret']
 
 #login to twitter-app to be able to call twiter's API
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 twitterAPI = tweepy.API(auth)
 
 jsonsource = "https://correspsearch.net/quotesalute/abfrage.xql"
