@@ -7,10 +7,11 @@ Created on Fri Dec 28 18:49:47 2018
 """
 import urllib.request, json, tweepy
 
-CONSUMER_KEY = 'xqIBv0HqN8iSutUlIVogCaON7'
-CONSUMER_SECRET = 'ZxHHXfTlYzplmgEFO8UAKALs4PEovL5Ho1Yh3lswEwdB22dPuh'
-ACCESS_KEY = '1078723959632351232-U2QjswT5q9jx49przCiS5ba296POBn'
-ACCESS_SECRET = 'hXCl80Kt2VqM8ijxlLxQUj5Xfgh8asG4Ed3o7l1IgSqV9'
+#Example values
+CONSUMER_KEY = 'EXAMPLEKEY'
+CONSUMER_SECRET = 'EXAMPLE'
+ACCESS_KEY = 'EXAMPLEKEY'
+ACCESS_SECRET = 'EXAMPLE'
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 twitterAPI = tweepy.API(auth)
