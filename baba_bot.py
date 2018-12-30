@@ -8,7 +8,7 @@ Created on Fri Dec 28 18:49:47 2018
 INTERVAL = 60
 
 
-import urllib.request, json, tweepy, datetime, re, time
+import urllib.request, json, tweepy, re, time
         
 #get private keys for the twittter account from module
 from keys import keys
@@ -23,6 +23,7 @@ auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 twitterAPI = tweepy.API(auth)
  
 def checkReplies(origTweetID):
+    "searches for all tweets by the bot and checks if one of them is a reply to the tweet with the origTweetID" 
     allReplies = twitterAPI.search(q="#servusbaba")
     for reply in allReplies:
          if (reply.in_reply_to_status_id == origTweetID):
@@ -31,13 +32,14 @@ def checkReplies(origTweetID):
 def addSpace(text):
     "Adds spaces when a camelCase is found"
     while re.match(r".*[a-z][A-Z].*" , text):
+        #find the location where the string matches the regex and add a space in there
         span = (re.search(r"[a-z][A-Z]" , text).span())
         location = ((span[0])+1)
         text = (text[:location] + ' ' + text[location:])
     return(text)
     
 def tweetSalute(user,replyToID):
-    "Calls the Twitter API to post a reply with a random quote, also does some repairwork if a space is missing"
+    "Calls the Twitter API to post a reply with a random quote, also initiates some repairwork if a space is missing"
     #get the source material as json from the quotesalute webservice
     jsonsource = "https://correspsearch.net/quotesalute/abfrage.xql"
     jsonsalute = urllib.request.urlopen(jsonsource)
@@ -51,7 +53,7 @@ def tweetSalute(user,replyToID):
     print("{} @{}".format(salute,user))
         
 while True:
-    #find all mentions and update the lastChecked timer
+    #find all mentions and check if the bot already replied
     allMentions = twitterAPI.search(q="@servusbaba")
     
     if not allMentions:
@@ -65,6 +67,6 @@ while True:
                 mentionID = mention.id
                 tweetSalute(fromUser,mentionID)
             else:
-                print("old mention found (from @baba{})".format(mention.user.screen_name))
+                print("old mention found (from @{})".format(mention.user.screen_name))
                     
     time.sleep(INTERVAL)
