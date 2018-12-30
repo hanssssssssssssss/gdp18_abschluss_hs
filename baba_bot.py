@@ -14,10 +14,16 @@ CONSUMER_SECRET = keys['consumer_secret']
 ACCESS_TOKEN = keys['access_token']
 ACCESS_TOKEN_SECRET = keys['access_token_secret']
 
-#login to twitter-app to be able to call twiter's API
+#login to twitter-app to be abled to call twiter's API
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 twitterAPI = tweepy.API(auth)
+
+def checkReplies(origTweetID):
+    allReplies = twitterAPI.search(q="#servusbaba")
+    for reply in allReplies:
+         if (reply.in_reply_to_status_id == origTweetID):
+             return(True)
 
 def addSpace(text):
     "Adds spaces when a camelCase is found"
@@ -28,7 +34,7 @@ def addSpace(text):
     return(text)
 
 def tweetSalute(user,replyToID):
-    "Calls the Twitter API to post a reply with a random quote, also does some repairwork if a spaces is missing"
+    "Calls the Twitter API to post a reply with a random quote, also does some repairwork if a space is missing"
     #get the source material as json from the quotesalute webservice
     jsonsource = "https://correspsearch.net/quotesalute/abfrage.xql"
     jsonsalute = urllib.request.urlopen(jsonsource)
@@ -38,22 +44,18 @@ def tweetSalute(user,replyToID):
     if re.match(r".*[a-z][A-Z].*" , salute ):
         salute = addSpace(salute)
     #send the reply
-    twitterAPI.update_status("{} @{}".format(salute,user) , in_reply_to_status_id = replyToID)
+    twitterAPI.update_status("{} @{} #servusbaba".format(salute,user) , in_reply_to_status_id = replyToID)
     print("{} @{}".format(salute,user))
     
 #find all mentions and update the lastChecked timer
 allMentions = twitterAPI.search(q="@servusbaba")
-lastChecked = datetime.datetime.now() - datetime.timedelta(days=1)
-
-#weed out the mentions that have already been seen
+ 
 for mention in allMentions:
-    print(mention.id)
-    print(mention.text)
-    print(mention.created_at)
-    print(lastChecked)
-    if lastChecked < mention.created_at:
+    #check if mention was already replied to
+    if not(checkReplies(mention.id)):
+        print(mention.text)
         fromUser = mention.user.screen_name
         mentionID = mention.id
         tweetSalute(fromUser,mentionID)
     else:
-        print("no new mentions found")
+        print("old mention found (from @{})".format(mention.user.screen_name))
