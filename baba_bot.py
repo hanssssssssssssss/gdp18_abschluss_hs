@@ -51,7 +51,6 @@ def tweetSalute(user,replyToID):
     print("{} @{}".format(salute,user))
         
 while True:
-    print("senf1")
     #find all mentions and update the lastChecked timer
     allMentions = twitterAPI.search(q="@servusbaba")
     for mention in allMentions:
@@ -63,6 +62,5 @@ while True:
             tweetSalute(fromUser,mentionID)
         else:
             print("old mention found (from @baba{})".format(mention.user.screen_name))
-        
-    print("senf")        
+    
     time.sleep(INTERVAL)
