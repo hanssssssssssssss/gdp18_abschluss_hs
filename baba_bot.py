@@ -53,14 +53,18 @@ def tweetSalute(user,replyToID):
 while True:
     #find all mentions and update the lastChecked timer
     allMentions = twitterAPI.search(q="@servusbaba")
-    for mention in allMentions:
-        #check if mention was already replied to
-        if not(checkReplies(mention.id)):
-            print(mention.text)
-            fromUser = mention.user.screen_name
-            mentionID = mention.id
-            tweetSalute(fromUser,mentionID)
-        else:
-            print("old mention found (from @baba{})".format(mention.user.screen_name))
     
+    if not allMentions:
+        print("no mentions found")
+    else:
+        for mention in allMentions:
+            #check if mention was already replied to
+            if not(checkReplies(mention.id)):
+                print(mention.text)
+                fromUser = mention.user.screen_name
+                mentionID = mention.id
+                tweetSalute(fromUser,mentionID)
+            else:
+                print("old mention found (from @baba{})".format(mention.user.screen_name))
+                    
     time.sleep(INTERVAL)
