@@ -29,8 +29,7 @@ TWITTER_API = tweepy.API(AUTH)
 def check_replies(origtweet_id):
     "checks if any tweet with the signature hashtag is a reply to the orig. tweet"
     all_replies = TWITTER_API.search(q="#servusbaba")
-    for reply in all_replies:
-        return bool(reply.in_reply_to_status_id == origtweet_id)
+    return True in (reply.in_reply_to_status_id == origtweet_id for reply in all_replies)
 
 def add_space(text):
     "Adds spaces where a camelCase is found"
